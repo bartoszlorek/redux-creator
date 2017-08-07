@@ -1,4 +1,5 @@
 import { apiMiddleware, CALL_API, getJSON } from 'redux-api-middleware';
+import { isPlainObject } from 'lodash';
 import normalizeAction from './normalizeAction';
 import createReducer from './createReducer';
 import addData from './addData';
@@ -7,36 +8,41 @@ function reduxCreator(reducers, options) {
     const __reducers = {};
     const __actions = {};
 
-    for (let reducerName in reducers) {
-        const reducer = reducers[reducerName];
-        const { initial, actions } = reducer;
-        const reducerMethod = reducer.reducer;
-        const reducerPrefix = `@@api/${reducerName}/`;
+    if (!isPlainObject(reducers)) {
+        throw 'First parameter must be a plain object.';
+    }
 
+    for (let reducerName in reducers) {
+        const { initial, actions, reducer } = reducers[reducerName];
+
+        if (!isPlainObject(actions)) {
+            throw 'Actions must be a plain object.';
+        }
+        if (reducer && typeof reducer !== 'function') {
+            throw 'Reducer must be a function.';
+        }
+
+        const reducerPrefix = `@@api/${reducerName}/`;
+        const localActions = {};
         const initialState = {
             data: initial ? initial : {},
             loading: false,
             error: null
         }
 
+        let currentReducer = bind(reducer, localActions);
         __reducers[reducerName] = {};
         __actions[reducerName] = {};
-        const localActions = {};
-
-        let currentReducer = reducerMethod;
-        if (typeof reducerMethod === 'function') {
-            currentReducer = reducerMethod.bind(localActions);
-        }
 
         for (let actionName in actions) {
-            const action = actions[actionName];
+            const actionObject = actions[actionName];
             const actionPrefix = reducerPrefix + actionName;
 
             // server or local action
-            if (action && action.endpoint) {
+            if (actionObject && actionObject.endpoint) {
                 const normalized = normalizeAction(
                     actionPrefix,
-                    action,
+                    actionObject,
                     options
                 );
 
@@ -53,10 +59,10 @@ function reduxCreator(reducers, options) {
             } else {
                 localActions[actionName] = actionPrefix;
 
-                if (typeof action === 'function') {
+                if (typeof actionObject === 'function') {
                     __actions[reducerName][actionName] = (data) => ({
                         type: actionPrefix,
-                        payload: action(data)
+                        payload: actionObject(data)
                     });
 
                 } else {
@@ -74,6 +80,13 @@ function reduxCreator(reducers, options) {
         reducers: __reducers,
         actions: __actions
     }
+}
+
+function bind(target, source) {
+    if (typeof target === 'function') {
+        return target.bind(source);
+    }
+    return target;
 }
 
 export default reduxCreator;
