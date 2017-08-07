@@ -1,4 +1,4 @@
-# reduxCreator
+# redux-creator
 
 ## Local Actions
 Flux Standard Action Creator and Reducer
@@ -19,7 +19,7 @@ function todoReducer(state = [], action) {
 }
 ```
 
-reduxCreator Style
+redux-creator Style
 
 ```javascript
 reduxCreator({
@@ -35,11 +35,11 @@ reduxCreator({
             return state;
         }
     }
-});
+})
 ```
 
 ## Server Actions
-The real benefits are gained by using Server Actions. Under the hood it's a [redux-api-middleware](https://github.com/agraboso/redux-api-middleware) in `reduxCreator` style. It's easy to combine both types of actions and our app is DRY. For example load `GET` todos from RESTful API. Creator makes all necessary actions: `request`, `success`, `failure` and bind them to reducer (creating own reducer is only for local actions, but it can be mixed).
+The real benefits are gained by using Server Actions. Under the hood it's a [redux-api-middleware](https://github.com/agraboso/redux-api-middleware) in `redux-creator` style. It's easy to combine both types of actions and our app is DRY. For example load `GET` todos from RESTful API. Creator makes all necessary actions: `request`, `success`, `failure` and bind them to reducer (creating own reducer is only for local actions, but it can be mixed).
 
 ```javascript
 reduxCreator({
@@ -53,17 +53,19 @@ reduxCreator({
             }
         }
     }
-});
+})
 ```
 
 ## Finally
-After all `reduxCreator` returns an object contains all `reducers` and `actions` (grouped according to reducers).
+After all `redux-creator` returns an object contains all `reducers` and `actions` (grouped according to reducers).
 
 ```javascript
-import { combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import reduxCreator, { apiMiddleware } from 'redux-creator';
 
 const rx = reduxCreator(...);
-const reducers = combineReducers(rx.reducers);
+const reducer = combineReducers(rx.reducers);
+const store = createStore(reducer, applyMiddleware(apiMiddleware));
 
 store.dispatch(rx.actions.todos.load());
 ```
