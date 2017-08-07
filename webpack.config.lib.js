@@ -2,10 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-    entry: [
-        'babel-polyfill',
-        './src/reduxCreator.js',
-    ],
+    entry: './src/reduxCreator.js',
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'redux-creator.min.js',

@@ -1,4 +1,4 @@
-import { CALL_API, getJSON } from 'redux-api-middleware';
+import { apiMiddleware, CALL_API, getJSON } from 'redux-api-middleware';
 import normalizeAction from './normalizeAction';
 import createReducer from './createReducer';
 import addData from './addData';
@@ -78,4 +78,4 @@ function reduxCreator(reducers, options) {
 
 export default reduxCreator;
 export const noReturn = () => { };
-export { getJSON }
+export { apiMiddleware, getJSON }
