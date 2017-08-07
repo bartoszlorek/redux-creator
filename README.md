@@ -69,3 +69,34 @@ const store = createStore(reducer, applyMiddleware(apiMiddleware));
 
 store.dispatch(rx.actions.todos.load());
 ```
+
+## Structure
+
+```javascript
+{
+    reducer: {
+        initial // state for reducer
+        actions // [Object] contains actions for specific reducer
+        reducer // [Function] for local actions
+    },
+    reducer: {
+        initial
+        actions {
+            localAction // [Function or Null] returns data for payload
+            serverAction {
+                // required
+                method // [String] HTTP methods,
+                endpoint // [String] URL to resources
+                
+                // optional
+                success // [Function] returns payload after successfully call
+                request // [Function] like a succes but after request call
+                failure // [Function] like a succes but after failure call
+            }
+        }
+    }
+    ...
+}
+```
+
+Callbacks `success`, `request` and `failure` are called with arguments `action`, `state` and `response`. When function returns `undefined` payload is ignoring. This is useful when we send `POST` method, but we do not want the response to interfere with the `store`.
