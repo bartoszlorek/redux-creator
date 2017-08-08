@@ -37,6 +37,7 @@ reduxCreator({
     }
 })
 ```
+Important! Inside `reducer` function `this` refers to object contains all Local Action type names.
 
 ## Server Actions
 The real benefits are gained by using Server Actions. Under the hood it's a [redux-api-middleware](https://github.com/agraboso/redux-api-middleware) in `redux-creator` style. It's easy to combine both types of actions and our app is DRY. For example load `GET` todos from RESTful API. Creator makes all necessary actions: `request`, `success`, `failure` and bind them to reducer (creating own reducer is only for local actions, but it can be mixed).
@@ -76,7 +77,7 @@ store.dispatch(rx.actions.todos.load());
 reduxCreator( reducers, options )
 ```
 
-#### reducers
+**reducers**
 
 ```javascript
 {
@@ -102,9 +103,10 @@ reduxCreator( reducers, options )
 ```
 Callbacks `success`, `request` and `failure` are called with arguments `action`, `state` and `response`. When function returns `undefined` payload is ignoring. This is useful when we send `POST` method, but we do not want the response to interfere with the `store`.
 
-#### options
+**options**
 ```javascript
 {
+    // optional
     rootUrl // [String] URL to resources placed before each endpoint
     headers // [Object] Additional header key/value pairs to send along with requests
 }
