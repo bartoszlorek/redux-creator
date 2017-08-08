@@ -19,7 +19,7 @@ function todoReducer(state = [], action) {
 }
 ```
 
-redux-creator Style
+`redux-creator` Style
 
 ```javascript
 reduxCreator({
@@ -70,20 +70,22 @@ const store = createStore(reducer, applyMiddleware(apiMiddleware));
 store.dispatch(rx.actions.todos.load());
 ```
 
-## Structure
+## Parameters
+
+```javascript
+reduxCreator( reducers, options )
+```
+
+#### reducers
 
 ```javascript
 {
-    reducer: {
-        initial // state for reducer
-        actions // [Object] contains actions for specific reducer
+    reducerName: {
+        initial // [Mixed] state for reducer [default Object]
         reducer // [Function] for local actions
-    },
-    reducer: {
-        initial
-        actions {
-            localAction // [Function or Null] returns data for payload
-            serverAction {
+        actions: {
+            localActionName // [Function or Null] returns data for payload
+            serverActionName {
                 // required
                 method // [String] HTTP methods,
                 endpoint // [String] URL to resources
@@ -94,9 +96,16 @@ store.dispatch(rx.actions.todos.load());
                 failure // [Function] like a succes but after failure call
             }
         }
-    }
+    },
     ...
 }
 ```
-
 Callbacks `success`, `request` and `failure` are called with arguments `action`, `state` and `response`. When function returns `undefined` payload is ignoring. This is useful when we send `POST` method, but we do not want the response to interfere with the `store`.
+
+#### options
+```javascript
+{
+    rootUrl // [String] URL to resources placed before each endpoint
+    headers // [Object] Additional header key/value pairs to send along with requests
+}
+```
