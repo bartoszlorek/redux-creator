@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ubery/redux-creator.git"
+    "url": "git+https://github.com/bartoszlorek/redux-creator.git"
   },
   "author": "Bartosz Lorek",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ubery/redux-creator/issues"
+    "url": "https://github.com/bartoszlorek/redux-creator/issues"
   },
-  "homepage": "https://github.com/ubery/redux-creator#readme",
+  "homepage": "https://github.com/bartoszlorek/redux-creator#readme",
   "dependencies": {
     "lodash": "^4.17.4",
     "redux": "^3.7.2",
